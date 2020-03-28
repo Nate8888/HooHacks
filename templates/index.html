@@ -1,5 +1,15 @@
 <html>
 <head><title>Brainwave Frame Hacking</title></head>
+<link rel="stylesheet" href="{{ url_for('static', filename='possible_slider.css')}}">
+<style>
+	body{
+		background-color: #111a2d;
+	}
+	h5{
+		color:white;
+	}
+</style>
+
 <body>
 
 	<strong><h1 id='currentAttentionPercentage' style='color:blue;'>0%</h1></strong>
@@ -7,21 +17,24 @@
 	<p id='previoushidden' hidden>0</p>
 	<video src="{{ url_for('static', filename='images/quant.mp4')}}" id='colorbars' width="640" height="480" hidden></video>
 	<!-- <img src="{{ url_for('static', filename='images/reflect.jpg')}}" id="colorbars"/> -->
-	<canvas id="canvas" width="800" height="500"></canvas>
-	<br>
-	<div class="controls">
+	<div style="text-align:center">
+  	<canvas id="canvas" width="800" height="500" align='center'></canvas>
+		<div class="controls">
 
-			<!-- Seek slider -->
-			<h5>Seek Slider:</h5>
-			<input type="range" id="seekSlider" min="0" max="100" value="0" step="1" width="800">
+				<button id="playBtn">Play</button>
+				<!-- Seek slider -->
+				<h5>Duration: </h5>
+				<input type="range" id="seekSlider" min="0" max="100" value="0" step="1" width="800">
 
-			<!-- Play/Pause button -->
-			<button id="playBtn">Play</button>
+				<!-- Play/Pause button -->
 
-			<!-- Volume slider -->
-			<h5>Volume Slider:</h5>
-			<input type="range" id="volumeBar" min="0" max="1" value="0.40" step="0.20" onchange="volumeChanged()">
-	</div>
+				<!-- Volume slider -->
+				<h5>Volume: </h5>
+				<input type="range" id="volumeBar" min="0" max="1" value="0.40" step="0.05" onchange="volumeChanged()">
+		</div>
+ </div>
+
+
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="{{ url_for('static', filename='js/sijax/sijax.js')}}"></script>
