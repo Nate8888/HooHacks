@@ -44,10 +44,20 @@ def mainPage():
         obj_response.html('#currentAttentionPercentage', str(attention_level)+"%")
         obj_response.html('#numericalhidden', attention_level)
 
+    def get_relaxation(obj_response,param):
+        myrelaxfile = open("relax.txt")
+        relax_level = 0
+        for each_line in myrelaxfile:
+            relax_level = int(each_line.rstrip())
+
+        obj_response.html('#currentRelaxationPercentage', str(relax_level)+"%")
+        obj_response.html('#numericalhiddenRelaxation', relax_level)
 
     if g.sijax.is_sijax_request:
         # Sijax request detected - let Sijax handle it
         g.sijax.register_callback('get_attention', get_attention)
+        g.sijax.register_callback('get_relaxation', get_relaxation)
+
         return g.sijax.process_request()
 
     # Regular (non-Sijax request) - render the page template
