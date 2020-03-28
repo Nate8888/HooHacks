@@ -12,7 +12,7 @@
         <style media="screen">
 
             body {
-                background-image: url("reee.jpg");
+                background-image: url("../static/images/reee.jpg");
                 background-color: black;
                 font-family: 'Roboto', sans-serif;
             }
@@ -24,10 +24,23 @@
                 text-align: center;
             }
 
-            canvas{
-                width: 500px !important;
-                height: 500px !important;
-                margin: 0 auto;
+            .main {
+                text-align: center;
+            }
+
+            canvas {
+                display: inline-block !important;
+            }
+
+            #attentionCanvas{
+                width: 400px !important;
+                height: 400px !important;
+                opacity: 0;
+            }
+
+            #relaxationCanvas{
+                width: 400px !important;
+                height: 400px !important;
                 opacity: 0;
             }
 
@@ -37,11 +50,16 @@
         </style>
     </head>
     <body>
-
         <h1 class="gloomy-text">DID I BLUR YOUR <b>MIND</b>?</h1>
 
-        <!-- The chart canvas -->
-        <canvas id="chart" width="200" height="200"></canvas>
+        <!-- Main div for both charts -->
+        <div class="main">
+            <!-- The attention chart canvas -->
+            <canvas id="attentionCanvas" width="200" height="200"></canvas>
+
+            <!-- The relaxation chart canvas -->
+            <canvas id="relaxationCanvas" width="200" height="200"></canvas>
+        </div>
 
         <script>
         // Seed data.
@@ -155,8 +173,8 @@
             53.841: 66,
             54.339: 66 }
 
-            // Getting the chart canvas.
-            const context = document.getElementById("chart").getContext("2d");
+            // Getting the attention chart canvas.
+            const attentionChartContext = document.getElementById("attentionCanvas").getContext("2d");
 
             // Creating the array of xlabels and ydata.
             const xlabels = [];
@@ -175,8 +193,8 @@
                 ydata.push(data[key]);
             }
 
-            // Creating the actual chart.
-            const myChart = new Chart(context, {
+            // Creating the attention chart.
+            const attentionChart = new Chart(attentionChartContext, {
                 type: "line",
                 data: {
                     labels: xlabels,
@@ -216,6 +234,68 @@
                             }
                         }],
                     },
+                    title: {
+                        text: "Attention",
+                        fontSize: 40,
+                        display: true,
+                        color: "rgba(112, 47, 180, 0.5)"
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+
+            // Getting the relaxation chart canvas.
+            const relaxationChartContext = document.getElementById("relaxationCanvas").getContext("2d");
+
+            // Creating the relaxation chart.
+            const relaxationChart = new Chart(relaxationChartContext, {
+                type: "line",
+                data: {
+                    labels: xlabels,
+                    datasets: [{
+                        data: ydata,
+                        backgroundColor: ["rgba(193, 12, 80, 0.7)"],
+                        borderColor: ["rgba(219, 64, 122, 1)"],
+                        borderWidth: 10
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Attention Level",
+                                fontSize: 40,
+                            }, ticks: {
+                                fontSize: 40,
+                                fontColor: "rgba(195, 195, 195, 1)",
+                            }, gridLines: {
+                                display: true,
+                                color: "rgba(219, 64, 122, 0.5)"
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Number of Watched Seconds",
+                                fontSize: 40
+                            }, ticks: {
+                                fontSize: 40,
+                                fontColor: "rgba(195, 195, 195, 1)",
+                            }, gridLines: {
+                                display: true,
+                                color: "rgba(219, 64, 122, 0.5)"
+                            }
+                        }],
+                    },
+                    title: {
+                        text: "Relaxation",
+                        fontSize: 40,
+                        display: true,
+                        color: "rgba(112, 47, 180, 0.5)"
+                    },
                     legend: {
                         display: false
                     }
@@ -223,21 +303,23 @@
             });
 
             // Animating the canvas.
-            const canv = document.getElementById("chart");
+            const attentionCanvas = document.getElementById("attentionCanvas");
+            const relaxationCanvas = document.getElementById("relaxationCanvas");
 
             document.addEventListener("DOMContentLoaded", () => {
-                fadeCanvas();
+                fadeCanvas(attentionCanvas);
+                fadeCanvas(relaxationCanvas);
             });
 
             var opacity = 0;
-            function fadeCanvas() {
+            function fadeCanvas(canvasObject) {
                 if (opacity < 1) {
                     opacity += 0.1;
                     setTimeout(() => {
-                        fadeCanvas();
+                        fadeCanvas(canvasObject);
                     }, 100);
                 }
-                canv.style.opacity = opacity;
+                canvasObject.style.opacity = opacity;
             }
         </script>
     </body>
