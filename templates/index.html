@@ -1,12 +1,101 @@
 <html>
 <head><title>Brainwave Frame Hacking</title></head>
-<link rel="stylesheet" href="{{ url_for('static', filename='possible_slider.css')}}">
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='possible_slider.css')}}"> -->
 <style>
-	body{
-		background-color: #111a2d;
+	input[type=range] {
+		-webkit-appearance: none;
+		width: 40%;
+		margin: 14.6px 0;
 	}
-	h5{
+	input[type=range]:focus {
+		outline: none;
+	}
+	input[type=range]::-webkit-slider-runnable-track {
+		width: 40%;
+		height: 0.8px;
+		cursor: pointer;
+		box-shadow: 0px 0px 3.8px rgba(0, 0, 0, 0.64), 0px 0px 0px rgba(13, 13, 13, 0.64);
+		background: #dfdfdf;
+		border-radius: 5.6px;
+		border: 0px solid #010101;
+	}
+	input[type=range]::-webkit-slider-thumb {
+		box-shadow: 0px 0px 10.9px rgba(0, 0, 0, 0.36), 0px 0px 0px rgba(13, 13, 13, 0.36);
+		border: 0px solid rgba(0, 0, 0, 0);
+		height: 30px;
+		width: 32px;
+		border-radius: 50px;
+		background: #ffffff;
+		cursor: pointer;
+		-webkit-appearance: none;
+		margin-top: -14.6px;
+	}
+	input[type=range]:focus::-webkit-slider-runnable-track {
+		background: #dfdfdf;
+	}
+	input[type=range]::-moz-range-track {
+		width: 40%;
+		height: 0.8px;
+		cursor: pointer;
+		box-shadow: 0px 0px 3.8px rgba(0, 0, 0, 0.64), 0px 0px 0px rgba(13, 13, 13, 0.64);
+		background: #dfdfdf;
+		border-radius: 5.6px;
+		border: 0px solid #010101;
+	}
+	input[type=range]::-moz-range-thumb {
+		box-shadow: 0px 0px 10.9px rgba(0, 0, 0, 0.36), 0px 0px 0px rgba(13, 13, 13, 0.36);
+		border: 0px solid rgba(0, 0, 0, 0);
+		height: 30px;
+		width: 32px;
+		border-radius: 50px;
+		background: #ffffff;
+		cursor: pointer;
+	}
+	input[type=range]::-ms-track {
+		width: 40%;
+		height: 0.8px;
+		cursor: pointer;
+		background: transparent;
+		border-color: transparent;
+		color: transparent;
+	}
+	input[type=range]::-ms-fill-lower {
+		background: #dfdfdf;
+		border: 0px solid #010101;
+		border-radius: 11.2px;
+		box-shadow: 0px 0px 3.8px rgba(0, 0, 0, 0.64), 0px 0px 0px rgba(13, 13, 13, 0.64);
+	}
+	input[type=range]::-ms-fill-upper {
+		background: #dfdfdf;
+		border: 0px solid #010101;
+		border-radius: 11.2px;
+		box-shadow: 0px 0px 3.8px rgba(0, 0, 0, 0.64), 0px 0px 0px rgba(13, 13, 13, 0.64);
+	}
+	input[type=range]::-ms-thumb {
+		box-shadow: 0px 0px 10.9px rgba(0, 0, 0, 0.36), 0px 0px 0px rgba(13, 13, 13, 0.36);
+		border: 0px solid rgba(0, 0, 0, 0);
+		height: 30px;
+		width: 32px;
+		border-radius: 50px;
+		background: #ffffff;
+		cursor: pointer;
+		height: 0.8px;
+	}
+	input[type=range]:focus::-ms-fill-lower {
+		background: #dfdfdf;
+	}
+	input[type=range]:focus::-ms-fill-upper {
+		background: #dfdfdf;
+	}
+	body{
+		background-size: cover;
+		background-image: url("{{ url_for('static', filename='images/reee.jpg')}}")
+	}
+	h3{
 		color:white;
+	}
+	#canvas{
+		border: 3px solid white;
 	}
 </style>
 
@@ -18,18 +107,18 @@
 	<video src="{{ url_for('static', filename='images/quant.mp4')}}" id='colorbars' width="640" height="480" hidden></video>
 	<!-- <img src="{{ url_for('static', filename='images/reflect.jpg')}}" id="colorbars"/> -->
 	<div style="text-align:center">
-  	<canvas id="canvas" width="800" height="500" align='center'></canvas>
-		<div class="controls">
+		<div style="text-align:center">
+	  	<canvas id="canvas" width="800px" height="500px" align='center'></canvas>
+		</div>
+	<div class="controls">
 
+				<br>
 				<button id="playBtn">Play</button>
 				<!-- Seek slider -->
-				<h5>Duration: </h5>
+				<h3>Duration: </h3>
 				<input type="range" id="seekSlider" min="0" max="100" value="0" step="1" width="800">
 
-				<!-- Play/Pause button -->
-
-				<!-- Volume slider -->
-				<h5>Volume: </h5>
+				<h3>Volume: </h3>
 				<input type="range" id="volumeBar" min="0" max="1" value="0.40" step="0.05" onchange="volumeChanged()">
 		</div>
  </div>

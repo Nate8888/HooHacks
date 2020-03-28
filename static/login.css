@@ -3,7 +3,7 @@
 body
 {
     background-size: cover;
-    background-image: url('loginPic.jpeg')
+    background-image: url("{{ url_for('static', filename='images/reee.jpg')}}")
 }
 
 h1
