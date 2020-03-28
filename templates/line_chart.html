@@ -8,10 +8,8 @@
         <!-- Chart CSS -->
         <style media="screen">
             canvas{
-
-                width:500px !important;
-                height:500px !important;
-
+                width: 600px !important;
+                height: 600px !important;
             }
         </style>
     </head>
@@ -131,14 +129,26 @@
             53.841: 66,
             54.339: 66 }
 
+            // Processing data.
+            // processData(data);
+
             // Getting the chart canvas.
             const context = document.getElementById("chart").getContext("2d");
 
             // Creating the array of xlabels and ydata.
             const xlabels = [];
             const ydata = [];
+            var counter = 0;
             for(var key in data) {
-                xlabels.push(key);
+
+                if ((counter % 5) == 0) {
+                    xlabels.push(key);
+                    counter = 0;
+                }else {
+                    xlabels.push("");
+                }
+                counter++;
+
                 ydata.push(data[key]);
             }
 
@@ -149,12 +159,8 @@
                     labels: xlabels,
                     datasets: [{
                         data: ydata,
-                        backgroundColor: [
-                            "rgba(255, 99, 132, 0.2)",
-                        ],
-                        borderColor: [
-                            "rgba(255, 99, 132, 1)",
-                        ],
+                        backgroundColor: ["rgba(9, 10, 50, 0.2)"],
+                        borderColor: ["rgba(9, 10, 50, 1)"],
                         borderWidth: 1
                     }]
                 },
