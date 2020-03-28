@@ -3,19 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="loading-bar.css"/>
-    <script type="text/javascript" src="loading-bar.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="loading-bar.css"/>
+    <script type="text/javascript" src="loading-bar.js"></script> -->
     <title>Document</title>
+    <style>
+
+    .progress-bar__container {
+      width: 500px;
+      height: 400px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: 50px auto;
+    }
+
+    .progress-bar__wrap {
+      background-color: rgb(233, 235, 238);
+      position: relative;
+      transform: translateY(-50%);
+      top: 50%;
+      margin-left: 50px;
+      width: 50px;
+      height: 320px;
+      float: left;
+    }
+
+    .bar-value {
+      background: linear-gradient(to top, #e616ff, #100593);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: auto;
+      box-sizing: border-box;
+      animation: grow 1.5s ease-out forwards;
+      transform-origin: bottom;
+    }
+    .bar-value::before {
+      content: attr(title);
+      position:absolute;
+      bottom:10px;
+      left:5px;
+      color:white;
+
+    }
+    @keyframes grow {
+      from {
+        transform: scaleY(0);
+      }
+    }
+
+    .bar-value  {
+      -webkit-animation: slideIn 1s;
+      -moz-animation: slideIn 1s;
+      -o-animation: slideIn 1s;
+      animation: slideIn 1s;
+    }
+
+    @-webkit-keyframes slideIn {
+      0% {
+        height: 0;
+      }
+      100% {
+        height: normal;
+      }
+    }
+
+    @-moz-keyframes slideIn {
+      0% {
+        height: 0;
+      }
+      100% {
+        height: normal;
+      }
+    }
+
+    @-ms-keyframes slideIn {
+      .progress-bar 0% {
+        height: 0;
+      }
+      .progress-bar 100% {
+        height: normal;
+      }
+    }
+
+    @-o-keyframes slideIn {
+      0% {
+        height: 0;
+      }
+      100% {
+        height: normal;
+      }
+    }
+
+    @keyframes slideIn {
+      0% {
+        height: 0;
+      }
+      100% {
+        height: normal;
+      }
+    }
+
+
+    </style>
 </head>
 
 <body>
-    Progress Bar
-    <div class="ldBar" data-value="69",
-    style="width:50%;height:100px",
-    style="rotate: 180deg;",
-    data-stroke="data:ldbar/res,gradient(0,1,#,#9,#9400D3,#9400D3)",
-    data-path="M10 20Q20 15 30 20Q40 25 50 20Q60 15 70 20Q80 25 90 20">
-</div>
+
+  <!--No JS!!! -->
+  <div class="progress-bar__container">
+    <div class="progress-bar__wrap">
+      <div class="bar-value" style="height:30%;">
+      </div>
+    </div>
+
 
 </body>
 </html>
