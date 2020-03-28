@@ -1,0 +1,230 @@
+<html>
+<head><title>Brainwave Frame Hacking</title></head>
+<body>
+
+	<strong><h1 id='currentAttentionPercentage' style='color:blue;'>0%</h1></strong>
+	<p id='numericalhidden' hidden>0</p>
+	<p id='previoushidden' hidden>0</p>
+	<video src="{{ url_for('static', filename='images/quant.mp4')}}" id='colorbars' width="640" height="480" hidden></video>
+	<!-- <img src="{{ url_for('static', filename='images/reflect.jpg')}}" id="colorbars"/> -->
+	<canvas id="canvas" width="800" height="500"></canvas>
+	<br>
+	<div class="controls">
+
+			<!-- Seek slider -->
+			<h5>Seek Slider:</h5>
+			<input type="range" id="seekSlider" min="0" max="100" value="0" step="1" width="800">
+
+			<!-- Play/Pause button -->
+			<button id="playBtn">Play</button>
+
+			<!-- Volume slider -->
+			<h5>Volume Slider:</h5>
+			<input type="range" id="volumeBar" min="0" max="1" value="0.40" step="0.20" onchange="volumeChanged()">
+	</div>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="{{ url_for('static', filename='js/sijax/sijax.js')}}"></script>
+
+	<script type="text/javascript">{{ g.sijax.get_js()|safe }}</script>
+
+	<!-- page content goes here -->
+	<script src="{{ url_for('static', filename='magicfolder/seriously.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.ascii.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.blur.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.vignette.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.kaleidoscope.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.exposure.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.edge.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.hue-saturation.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.split.js')}}"></script>
+
+	<script>
+		// var myVideo = document.getElementById("colorbars");
+		// var playBtn = document.getElementById("playBtn");
+		// var pauseBtn = document.getElementById("pauseBtn");
+
+		var startOfTheVideoDate;
+
+		var currentNum;
+		var previous = 0;
+		var beginning = true;
+		var dict = {};
+		var PercentOfVideoDone;
+
+		window.setInterval(function(){
+			if(playing && PercentOfVideoDone<1){
+				myCurrentIndex = document.getElementById("currentAttentionPercentage").innerText;
+				previousValue = parseInt(document.getElementById("previoushidden").innerText);
+
+				var otherlocalDate = new Date();
+
+				currentVideoTime = (otherlocalDate.getTime() - startOfTheVideoDate)/1000;
+
+				Sijax.request('get_attention', [myCurrentIndex]);
+				currentValue = parseInt(document.getElementById("numericalhidden").innerText);
+
+				dict[currentVideoTime] = currentValue; //Add to a javascript dictionary so we can send this to GCP.
+				// console.log(currentValue + "<->" + previousValue);
+				if(currentValue > previousValue){
+					// console.log("Increased.")
+					myCurrentIndex = document.getElementById("currentAttentionPercentage").style = "color:green;";
+				}
+				else if(currentValue==previousValue){
+					console.log();//myCurrentIndex = document.getElementById("currentAttentionPercentage").style = "color:blue;";
+				}
+				else{
+					myCurrentIndex = document.getElementById("currentAttentionPercentage").style = "color:red;";
+				}
+				previousValue = document.getElementById("previoushidden").innerText = currentValue;
+
+				if(currentValue <= 50){
+					playBlurry(currentValue);
+				}
+				else{
+					playNormal();
+				}
+
+			}
+			if(PercentOfVideoDone == 1){
+				calculateMean();
+			}
+		}, 500);
+
+		function calculateMean(){
+			var sumofallvalues = 0;
+			var sumofallfrequencies = 0;
+			for (let [key, value] of Object.entries(dict)) {
+				sumofallvalues = sumofallvalues + parseInt(`${value}`)*parseFloat(`${key}`);
+				sumofallfrequencies = sumofallfrequencies + parseFloat(`${key}`);
+			}
+			var totalAvgAtt = sumofallvalues/sumofallfrequencies;
+			console.log("Average Attention is "+totalAvgAtt);
+		}
+		// playBtn.onclick = function () {
+		// 	if(beginning){
+		// 		playNormal();
+		// 		localDate = new Date();
+		// 		startOfTheVideoDate = localDate.getTime();
+		//
+		// 		beginning = false;
+		// 	}
+		//  myVideo.play();
+		// }
+
+		// Getting references to essential elements.
+		const vid = document.getElementById("colorbars");
+		const playBtn = document.getElementById("playBtn");
+		const seekSlider = document.getElementById("seekSlider");
+		const volumeBarInput = document.getElementById("volumeBar");
+
+		// Play or pause clicked!
+		playBtn.addEventListener("click", () => {
+				if(beginning){
+					playNormal();
+					localDate = new Date();
+					startOfTheVideoDate = localDate.getTime();
+
+					beginning = false;
+				}
+				if(vid.paused) {
+						vid.play();
+						playBtn.innerHTML = "Pause";
+				}else {
+						vid.pause();
+						playBtn.innerHTML = "Play";
+				}
+		});
+
+		// Runs every time the video time is updated.
+		vid.addEventListener("timeupdate", () => {
+				// Getting the percentage that has aready been played of the video.
+				PercentOfVideoDone = vid.currentTime / vid.duration;
+
+				// Updating the seek slider.
+				seekSlider.value = PercentOfVideoDone * 100;
+		});
+
+		// Volume changed!
+		function volumeChanged() {
+				vid.volume = volumeBarInput.value;
+		}
+
+		// The seek slider has been used!
+		seekSlider.addEventListener("change", () => {
+
+				var perc = (seekSlider.value / 100);
+				var seekTo = vid.duration * perc;
+				vid.currentTime = seekTo;
+		});
+
+			//This will send a an Ajax request to the server to alter the javascript on the go *mind blowin*
+	// declare our variables
+				var seriously, // the main object that holds the entire composition
+					colorbars, // a wrapper object for our source image
+					vignette, // a vignette effect
+					target; // a wrapper object for our target canvas
+
+					var playing = false;
+					//segments, offset
+				// kaleidoscopeEffect = seriously.effect('kaleidoscope');
+				// 	//background #hexcolor
+				// AsciiEffect = seriously.effect('ascii');
+
+				seriously = new Seriously();
+				colorbars = seriously.source('#colorbars');
+				target = seriously.target('#canvas');
+
+				function playNormal(){
+					if(playing){
+						stopEffect();
+					}
+					currentEffect = seriously.effect('blur');
+					currentEffect.source = colorbars;
+					currentEffect.amount = 0;
+					target.source = currentEffect;
+					seriously.go();
+					playing = true;
+				}
+
+				function playBlurry(attentionLevelAtTheMoment){
+					if(playing){
+						stopEffect();
+					}
+					var localamount = 0
+					if(attentionLevelAtTheMoment > 40 && attentionLevelAtTheMoment <= 50){
+						localamount = 0.02;
+					}
+					else if(attentionLevelAtTheMoment > 35 && attentionLevelAtTheMoment <= 40){
+						localamount = 0.05;
+					}
+					else{
+						localamount = 0.1;
+					}
+					currentEffect = seriously.effect('blur');
+					currentEffect.source = colorbars;
+					currentEffect.amount = localamount;
+					target.source = currentEffect;
+					seriously.go();
+					playing = true;
+				}
+
+				function startEffect(effectNameString){
+					if(playing){
+						stopEffect();
+					}
+					//effect = seriously.effect('kaleidoscope');
+					currentEffect = seriously.effect(effectNameString);
+					currentEffect.source = colorbars;
+					target.source = currentEffect;
+					seriously.go();
+					playing = true;
+				}
+
+				function stopEffect(){
+					seriously.stop();
+					playing = false;
+				}
+	</script>
+</body>
+</html>

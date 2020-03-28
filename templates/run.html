@@ -1,0 +1,49 @@
+<html>
+<head><title>Seriously.js Tutorial</title></head>
+<body>
+
+	<p id='currentAttentionPercentage'>0%</p>
+	<video src="{{ url_for('static', filename='images/quant.mp4')}}" id='colorbars' width="640" height="480" hidden></video>
+	<!-- <img src="{{ url_for('static', filename='images/reflect.jpg')}}" id="colorbars"/> -->
+	<canvas id="canvas" width="800" height="500"></canvas>
+
+	<button id = "playBtn"> Play </button>
+	<button id = "pauseBtn"> Pause </button>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="{{ url_for('static', filename='js/sijax/sijax.js')}}"></script>
+
+	<script type="text/javascript">{{ g.sijax.get_js()|safe }}</script>
+
+	<!-- page content goes here -->
+	<script src="{{ url_for('static', filename='magicfolder/seriously.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.vignette.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.hue-saturation.js')}}"></script>
+	<script src="{{ url_for('static', filename='magicfolder/effects/seriously.split.js')}}"></script>
+	<script>
+
+			//This will send a an Ajax request to the server to alter the javascript on the go *mind blowin*
+			var currentNum;
+			var previous = 0;
+			window.setInterval(function(){
+				myCurrentIndex = document.getElementById("currentAttentionPercentage").innerText;
+				Sijax.request('say_hi', [myCurrentIndex]);
+			}, 500);
+	// declare our variables
+				var seriously, // the main object that holds the entire composition
+					colorbars, // a wrapper object for our source image
+					vignette, // a vignette effect
+					target; // a wrapper object for our target canvas
+
+				seriously = new Seriously();
+				colorbars = seriously.source('#colorbars');
+				target = seriously.target('#canvas');
+				vignette = seriously.effect('vignette');
+
+				// connect all our nodes in the right order
+				vignette.source = colorbars;
+				target.source = vignette;
+				seriously.go();
+	</script>
+</body>
+</html>

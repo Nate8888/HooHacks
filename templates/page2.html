@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>SoundChat - Nathan, Emmanuel, Uday</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+	 <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css')}}"/></noscript>
+	 <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/Form_2.css')}}">
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+			<div id="wrapper">
+				<!-- Header -->
+					<header id="header" class="alt">
+						<h1>SoundChat</h1>
+						<span class="logo"><img src="{{ url_for('static', filename='revised.png')}}" alt="logo"/></span>
+						<button id = "button" onclick="playSound('{{msg}}');setup();draw();" class = "btn-5">PLAY</button>
+						<p id= "response" style= "font-size: xx-large;">Your message is: {{msg}}</p>
+					</header>
+				<!-- Nav -->
+			</div>
+
+			<!-- Scripts -->
+			<script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/addons/p5.sound.js"></script>
+	    <script src="{{ url_for('static', filename='js/otherbeeps.js') }}" charset="utf-8"></script>
+	    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	    <script src="{{ url_for('static', filename='js/jquery.scrollex.min.js') }}"></script>
+	    <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+	    <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+	    <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+	    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+			<script type="text/javascript">
+
+					function message(aa){
+						var a = document.getElementById('response');
+						a.innerHTML = "Your message is: "+aa;
+					}
+					function playSound(mytext) {
+					  // Grab message in form
+						console.log(mytext)
+					  const formInput = mytext;
+
+					  // Encode the message into hexadecimal
+					  const values = encodeTxArray(formInput.split(''));
+
+					  // Each tone and its cooresponding frequency.
+					  // begin and end are markers and not used when
+					  // reconstructing message.
+					  const freqs = {
+					    '0': 5000,
+					    '1': 5100,
+					    '2': 5200,
+					    '3': 5300,
+					    '4': 5400,
+					    '5': 5500,
+					    '6': 5600,
+					    '7': 5700,
+					    '8': 5800,
+					    '9': 5900,
+					    'A': 6000,
+					    'B': 6100,
+					    'C': 6200,
+					    'D': 6300,
+					    'E': 6400,
+					    'F': 6500,
+					  };
+
+					  const playTime = 1;
+
+					  for (let j = 0; j < values.length; j++)
+					  {
+
+					    window.AudioContext = window.AudioContext||window.webkitAudioContext;
+
+					    var context = new AudioContext();
+
+					    var OscillatorNode = context.createOscillator();
+					    OscillatorNode.type = 'sine';
+					    OscillatorNode.frequency.value = 4000;
+
+					    var gainNode = context.createGain();
+					    gainNode.gain.value = 1;
+					    OscillatorNode.start(j*playTime);
+					    OscillatorNode.connect(context.destination);
+					    OscillatorNode.stop(j*playTime+playTime/2);
+
+					    //SPLIT
+					    var OscillatorNode2 = context.createOscillator();
+					    OscillatorNode2.type = 'sine';
+					    OscillatorNode2.frequency.value = freqs[values[j]];
+
+					    var gainNode2 = context.createGain();
+					    gainNode2.gain.value = 1;
+
+					    OscillatorNode2.start(j*playTime+playTime/2);
+					    OscillatorNode2.connect(context.destination);
+					    OscillatorNode2.stop(j*playTime+playTime);
+					  }
+
+					  var OscillatorNode3 = context.createOscillator();
+					  OscillatorNode3.type = 'sine';
+					  OscillatorNode3.frequency.value = 4500;
+
+					  var gainNode3 = context.createGain();
+					  gainNode3.gain.value = 1;
+
+					  OscillatorNode3.start(values.length*playTime);
+					  OscillatorNode3.connect(context.destination);
+					  OscillatorNode3.stop(values.length*playTime+0.3);
+
+					}
+
+					function encodeTxArray(txPayload) {
+
+					  let hex = [];
+
+					  for(let e of txPayload) {
+					    hex.push(e.charCodeAt(0).toString(16).toUpperCase());
+					  }
+					  console.log("Input converted to", hex);
+
+					  let output = [];
+					  for(let e of hex) {
+					    let temp = e.split("");
+					    for(let t of temp) {
+					      output.push(t);
+					    }
+					  }
+					  console.log(output);
+					  return output;
+					}
+
+					let mic, fft;
+
+					function setup() {
+					  createCanvas(1200, 100);
+					  noFill();
+
+					  mic = new p5.AudioIn();
+					  mic.start();
+					  fft = new p5.FFT();
+					  fft.setInput(mic);
+						// Start the audio context on a click/touch event so sound can be recorded
+						// This is required to get microphone access.
+						userStartAudio().then(()=>{
+								console.log("Microphone enabled.");
+						});
+					}
+
+					function draw() {
+					  background(200);
+
+					  let spectrum = fft.analyze();
+
+					  beginShape();
+					  for (i = 0; i < spectrum.length; i++) {
+					    vertex(i, map(spectrum[i], 0, 255, height, 0));
+					  }
+					  endShape();
+					}
+
+			</script>
+
+	</body>
+</html>
