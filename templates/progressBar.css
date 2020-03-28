@@ -1,0 +1,22 @@
+/* login.css */
+@import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
+body
+{
+    background-size: cover;
+    background-image: url('loginPic.jpeg')
+}
+
+h1
+{
+    color: white;
+    text-align: center;
+    font-size: 75px;
+    font-family: 'Quicksand', 'sans-serif';
+}
+
+h2
+{
+    color: white;
+    text-align: center;
+    font-size: 25px;
+}
