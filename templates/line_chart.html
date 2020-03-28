@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Dashboard</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+        <!-- Chart CSS -->
+        <style media="screen">
+            canvas{
+
+                width:500px !important;
+                height:500px !important;
+
+            }
+        </style>
+    </head>
+    <body>
+        <!-- The chart canvas -->
+        <canvas id="chart" width="200" height="200"></canvas>
+
+        <script>
+        // Seed data.
+        var data = {
+            0.833: 0,
+            1.346: 44,
+            1.833: 44,
+            2.332: 44,
+            2.833: 47,
+            3.334: 47,
+            3.833: 51,
+            4.368: 51,
+            4.833: 51,
+            5.334: 57,
+            5.832: 60,
+            6.332: 56,
+            6.832: 56,
+            7.333: 64,
+            7.833: 64,
+            8.333: 66,
+            8.833: 66,
+            9.333: 66,
+            9.832: 70,
+            10.333: 70,
+            10.833: 78,
+            11.332: 78,
+            11.832: 63,
+            12.333: 63,
+            12.833: 63,
+            13.333: 63,
+            13.832: 63,
+            14.332: 57,
+            14.832: 57,
+            15.334: 67,
+            15.833: 67,
+            16.333: 64,
+            16.833: 64,
+            17.334: 61,
+            17.834: 61,
+            18.333: 53,
+            18.846: 53,
+            19.332: 38,
+            19.833: 38,
+            20.332: 30,
+            20.832: 30,
+            21.332: 23,
+            21.833: 23,
+            22.333: 23,
+            22.834: 30,
+            23.346: 30,
+            23.832: 41,
+            24.334: 41,
+            24.833: 50,
+            25.332: 50,
+            25.832: 54,
+            26.332: 54,
+            26.834: 56,
+            27.343: 56,
+            27.833: 57,
+            28.333: 57,
+            28.833: 56,
+            29.333: 56,
+            29.844: 61,
+            30.333: 61,
+            30.833: 63,
+            31.333: 63,
+            31.833: 61,
+            32.342: 61,
+            32.833: 64,
+            33.341: 64,
+            33.832: 57,
+            34.342: 57,
+            34.833: 53,
+            35.344: 53,
+            35.832: 54,
+            36.337: 54,
+            36.836: 54,
+            37.337: 50,
+            37.838: 53,
+            38.34: 53,
+            38.841: 51,
+            39.339: 51,
+            39.839: 53,
+            40.337: 56,
+            40.838: 56,
+            41.335: 56,
+            41.836: 53,
+            42.353: 53,
+            42.838: 61,
+            43.338: 61,
+            43.837: 64,
+            44.344: 64,
+            44.856: 64,
+            45.342: 63,
+            45.843: 64,
+            46.337: 57,
+            46.837: 57,
+            47.339: 57,
+            47.837: 50,
+            48.337: 50,
+            48.841: 51,
+            49.338: 51,
+            49.84: 50,
+            50.34: 50,
+            50.859: 50,
+            51.346: 53,
+            51.841: 53,
+            52.339: 53,
+            52.838: 61,
+            53.355: 61,
+            53.841: 66,
+            54.339: 66 }
+
+            // Getting the chart canvas.
+            const context = document.getElementById("chart").getContext("2d");
+
+            // Creating the array of xlabels and ydata.
+            const xlabels = [];
+            const ydata = [];
+            for(var key in data) {
+                xlabels.push(key);
+                ydata.push(data[key]);
+            }
+
+            // Creating the actual chart.
+            const myChart = new Chart(context, {
+                type: "line",
+                data: {
+                    labels: xlabels,
+                    datasets: [{
+                        data: ydata,
+                        backgroundColor: [
+                            "rgba(255, 99, 132, 0.2)",
+                        ],
+                        borderColor: [
+                            "rgba(255, 99, 132, 1)",
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Attention Level"
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Number of Watched Seconds"
+                            }
+                        }],
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
