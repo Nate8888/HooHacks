@@ -27,7 +27,20 @@ app.config['SIJAX_JSON_URI'] = '/static/js/sijax/json2.js'
 flask_sijax.Sijax(app)
 # g.sijax.register_callback('function_name', function_name)
 
-@flask_sijax.route(app, '/')
+@app.route('/graphresults',methods=['POST'])
+def graph():
+
+    attention = request.form.get('att')
+    relaxation = request.form.get('rel')
+    print(attention)
+    print(relaxation)
+    return render_template('line_chart.html', att=attention, rel=relaxation)
+
+@app.route('/')
+def actual_main():
+    return render_template('mainPage.html')
+
+@flask_sijax.route(app, '/brainwave')
 def mainPage():
     # Every Sijax handler function (like this one) receives at least
     # one parameter automatically, much like Python passes `self`
@@ -53,10 +66,14 @@ def mainPage():
         obj_response.html('#currentRelaxationPercentage', str(relax_level)+"%")
         obj_response.html('#numericalhiddenRelaxation', relax_level)
 
+    def make_graph(obj_response,arg1, arg2):
+        return render_template('line_chart.html')
+
     if g.sijax.is_sijax_request:
         # Sijax request detected - let Sijax handle it
         g.sijax.register_callback('get_attention', get_attention)
         g.sijax.register_callback('get_relaxation', get_relaxation)
+        g.sijax.register_callback('make_graph', make_graph)
 
         return g.sijax.process_request()
 

@@ -12,7 +12,7 @@
         <style media="screen">
 
             body {
-                background-image: url("../static/images/reee.jpg");
+                background-image: url("{{ url_for('static', filename='images/reee.jpg')}}");
                 background-color: black;
                 font-family: 'Roboto', sans-serif;
             }
@@ -62,6 +62,15 @@
         </div>
 
         <script>
+
+        var myvar = {{att|tojson}};
+        var attentionData = JSON.parse(myvar); //JSON OBJECT
+
+        var myvar2 = {{rel|tojson}};
+        var relaxationData = JSON.parse(myvar2); //JSON OBJECT
+
+        console.log(attentionData);
+
         // Seed data.
         var data = {
             0.833: 0,
@@ -171,7 +180,8 @@
             52.838: 61,
             53.355: 61,
             53.841: 66,
-            54.339: 66 }
+            54.339: 66 };
+
 
             // Getting the attention chart canvas.
             const attentionChartContext = document.getElementById("attentionCanvas").getContext("2d");
@@ -180,7 +190,12 @@
             const xlabels = [];
             const ydata = [];
             var counter = 0;
-            for(var key in data) {
+
+            const xlabels2 = [];
+            const ydata2 = [];
+            var counter2 = 0;
+
+            for(var key in attentionData) {
 
                 if ((counter % 5) == 0) {
                     xlabels.push(key);
@@ -190,7 +205,20 @@
                 }
                 counter++;
 
-                ydata.push(data[key]);
+                ydata.push(attentionData[key]);
+            }
+
+            for(var key in relaxationData) {
+
+                if ((counter % 5) == 0) {
+                    xlabels2.push(key);
+                    counter2 = 0;
+                }else {
+                    xlabels2.push("");
+                }
+                counter++;
+
+                ydata2.push(relaxationData[key]);
             }
 
             // Creating the attention chart.
@@ -259,9 +287,9 @@
             const relaxationChart = new Chart(relaxationChartContext, {
                 type: "line",
                 data: {
-                    labels: xlabels,
+                    labels: xlabels2,
                     datasets: [{
-                        data: ydata,
+                        data: ydata2,
                         backgroundColor: ["rgba(193, 12, 80, 0.7)"],
                         borderColor: ["rgba(219, 64, 122, 1)"],
                         borderWidth: 10
@@ -272,7 +300,7 @@
                         yAxes: [{
                             scaleLabel: {
                                 display: true,
-                                labelString: "Attention Level",
+                                labelString: "Relaxation Level",
                                 fontSize: 40,
                                 fontColor: "#ffffff"
                             }, ticks: {

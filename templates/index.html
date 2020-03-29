@@ -216,6 +216,7 @@
 
 			<div style="">
 					<div class="progress-bar__container">
+						<p style='color:white;'>Relaxation<p>
 						<div class="progress-bar__wrap">
 							<div class="bar-value">
 
@@ -227,6 +228,7 @@
 			</div>
 			<div style="">
 					<div class="progress-bar__container2">
+						<p style='color:white;'>Attention<p>
 						<div class="progress-bar__wrap">
 							<div class="bar-value">
 							</div>
@@ -279,6 +281,7 @@
 		var previous = 0;
 		var beginning = true;
 		var dict = {};
+		var meditationDict = {};
 		var PercentOfVideoDone;
 
 		window.setInterval(function(){
@@ -293,23 +296,25 @@
 				Sijax.request('get_attention', [myCurrentIndex]);
 				Sijax.request('get_relaxation', [myCurrentIndex]);
 
+
 				meditationValue = parseInt(document.getElementById("numericalhiddenRelaxation").innerText);
 
 
 				currentValue = parseInt(document.getElementById("numericalhidden").innerText);
 
 				dict[currentVideoTime] = currentValue; //Add to a javascript dictionary so we can send this to GCP.
+				meditationDict[currentVideoTime] = meditationValue;
 				// console.log(currentValue + "<->" + previousValue);
-				if(currentValue > previousValue){
-					// console.log("Increased.")
-					myCurrentIndex = document.getElementById("currentAttentionPercentage").style = "color:green;";
-				}
-				else if(currentValue==previousValue){
-					console.log();//myCurrentIndex = document.getElementById("currentAttentionPercentage").style = "color:blue;";
-				}
-				else{
-					myCurrentIndex = document.getElementById("currentAttentionPercentage").style = "color:red;";
-				}
+				// if(currentValue > previousValue){
+				// 	// console.log("Increased.")
+				// 	myCurrentIndex = document.getElementById("currentAttentionPercentage").style = "color:green;";
+				// }
+				// else if(currentValue==previousValue){
+				// 	console.log();//myCurrentIndex = document.getElementById("currentAttentionPercentage").style = "color:blue;";
+				// }
+				// else{
+				// 	myCurrentIndex = document.getElementById("currentAttentionPercentage").style = "color:red;";
+				// }
 				previousValue = document.getElementById("previoushidden").innerText = currentValue;
 
 				document.getElementsByClassName('bar-value')[1].style = 'height:'+currentValue+"%";
@@ -325,6 +330,10 @@
 			}
 			if(PercentOfVideoDone == 1){
 				calculateMean();
+				var asJSON = JSON.stringify(dict);
+				var asJSON2 = JSON.stringify(meditationDict);
+				post('/graphresults', {att: asJSON,rel:asJSON2});
+				// Sijax.request('make_graph', [dict,meditationDict]);
 			}
 		}, 500);
 
@@ -337,6 +346,35 @@
 			}
 			var totalAvgAtt = sumofallvalues/sumofallfrequencies;
 			console.log("Average Attention is "+totalAvgAtt);
+		}
+		/**
+ * sends a request to the specified url from a form. this will change the window location.
+ * @param {string} path the path to send the post request to
+ * @param {object} params the paramiters to add to the url
+ * @param {string} [method=post] the method to use on the form
+ */
+
+		function post(path, params, method='post') {
+
+		  // The rest of this code assumes you are not using a library.
+		  // It can be made less wordy if you use one.
+		  const form = document.createElement('form');
+		  form.method = method;
+		  form.action = path;
+
+		  for (const key in params) {
+		    if (params.hasOwnProperty(key)) {
+		      const hiddenField = document.createElement('input');
+		      hiddenField.type = 'hidden';
+		      hiddenField.name = key;
+		      hiddenField.value = params[key];
+
+		      form.appendChild(hiddenField);
+		    }
+		  }
+
+		  document.body.appendChild(form);
+		  form.submit();
 		}
 		// playBtn.onclick = function () {
 		// 	if(beginning){
