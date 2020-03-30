@@ -208,7 +208,7 @@
 
 	<p id='numericalhidden' hidden>0</p>
 	<p id='previoushidden' hidden>0</p>
-	<p id='numericalhiddenRelaxation'>0</p>
+	<p id='numericalhiddenRelaxation' hidden>0</p>
 
 	<video src="{{ url_for('static', filename='images/quant.mp4')}}" id='colorbars' width="640" height="480" hidden></video>
 	<!-- <img src="{{ url_for('static', filename='images/reflect.jpg')}}" id="colorbars"/> -->
@@ -248,7 +248,7 @@
 							<input type="range" id="seekSlider" min="0" max="100" value="0" step="1" width="800">
 
 							<h3>Volume: </h3>
-							<input type="range" id="volumeBar" min="0" max="1" value="0.40" step="0.05" onchange="volumeChanged()">
+							<input type="range" id="volumeBar" min="0" max="1" value="0.50" step="0.05" onchange="volumeChanged()">
 					</div>
 			 </div>
 
@@ -322,9 +322,17 @@
 
 				if(currentValue <= 50){
 					playBlurry(currentValue);
+					if(currentValue <= 20){
+						startEffect('kaleidoscope');
+					}
 				}
 				else{
-					playNormal();
+					if(previousValue > currentValue){
+						playBlurry(currentValue);
+					}
+					else{
+						playNormal();
+					}
 				}
 
 			}
@@ -467,14 +475,17 @@
 						stopEffect();
 					}
 					var localamount = 0
-					if(attentionLevelAtTheMoment > 40 && attentionLevelAtTheMoment <= 50){
-						localamount = 0.02;
+					if(attentionLevelAtTheMoment>50){
+						localamount = 0.012;
+					}
+					else if(attentionLevelAtTheMoment > 40 && attentionLevelAtTheMoment <= 50){
+						localamount = 0.016789;
 					}
 					else if(attentionLevelAtTheMoment > 35 && attentionLevelAtTheMoment <= 40){
-						localamount = 0.05;
+						localamount = 0.0282;
 					}
 					else{
-						localamount = 0.1;
+						localamount = 0.035;
 					}
 					currentEffect = seriously.effect('blur');
 					currentEffect.source = colorbars;
