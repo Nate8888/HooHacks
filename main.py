@@ -83,40 +83,6 @@ def mainPage():
 # def function_name(obj_response, arg1, arg2, arg3):
 #     obj_response.alert('You called the function successfully!')
 
-@flask_sijax.route(app, '/hello')
-def hello():
-    # Every Sijax handler function (like this one) receives at least
-    # one parameter automatically, much like Python passes `self`
-    # to object methods.
-    # The `obj_response` parameter is the function's way of talking
-    # back to the browser
-    def say_hi(obj_response,param):
-
-        fin = open("data.txt")
-        attention_level = 0
-        for each_line in fin:
-            attention_level = int(each_line.rstrip())
-
-        obj_response.html('#currentAttentionPercentage', str(attention_level)+"%")
-
-
-    if g.sijax.is_sijax_request:
-        # Sijax request detected - let Sijax handle it
-        g.sijax.register_callback('say_hi', say_hi)
-        return g.sijax.process_request()
-
-    # Regular (non-Sijax request) - render the page template
-    return render_template('run.html')
-
-# def function_name(obj_response, arg1, arg2, arg3):
-#     obj_response.alert('You called the function successfully!')
-
-
-# @app.route('/cloudtest')
-# def ooga():
-#     make_png('test')
-#     return 'uploaded to cloud!'
-
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This

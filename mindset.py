@@ -12,10 +12,6 @@ currentMeditationValue = 1
 currentIndex2 = 0
 
 
-def blink_callback(value):
-    print(value)
-
-
 def attention_callback(value):
     global currentAttentionValue
     global currentIndex
@@ -40,7 +36,6 @@ def meditation_callback(value):
 object1.setCallBack("attention",attention_callback)
 object1.setCallBack("meditation",meditation_callback)
 
-#object1.setCallBack("meditation",meditation_callback)
 
 object1.start()
 time.sleep(2)
